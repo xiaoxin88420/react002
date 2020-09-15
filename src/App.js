@@ -1,35 +1,65 @@
-import { render } from '@testing-library/react'
 import React, { Component } from 'react'
+import Card from './components/Card'
 
 class App extends Component {
 
   state = {
-    result: 0
+    title: '',
+    poster: '',
+    plot: '',
+    movies: []
   }
 
-  adder = event => {
-    let num = parseInt(event.target.value)
-    this.setState({ result: this.state.result + num })
+  handleInputChange = event => {
+    this.setState({ [event.target.name]: event.target.value })
   }
 
-  reset = () => {
-    this.setState({ result: 0})
+  handleAddMovie= event => {
+    event.preventDefault()
+    let movies = JSON.parse(JSON.stringify(this.state.movies))
+    movies.push({
+      title: this.state.title,
+      poster: this.state.poster,
+      plot: this.state.plot
+    })
+    this.setState({movies, title:'', poster:'', plot:''})
+
   }
 
   render() {
     return (
-
       <>
-        <h1>Result: {this.state.result}</h1>
-        <button onClick={this.adder} value={1}>+1</button>
-        <button onClick={this.adder} value={2}>+2</button>
-        <button onClick={this.adder} value={3}>+3</button>
-        <button onClick={this.adder} value={4}>+4</button>
-        <button onClick={this.adder} value={5}>+5</button>
-        <button onClick={this.reset}>Reset</button>
+        <form>
+          <label htmlFor="title">title</label>
+          <input
+            type="text"
+            name="title"
+            value={this.state.title}
+            onChange={this.handleInputChange} />
+          <label htmlFor="poster">poster</label>
+          <input
+            type="text"
+            name="poster"
+            value={this.state.poster}
+            onChange={this.handleInputChange} />
+          <label htmlFor="plot">plot</label>
+          <input
+            type="text"
+            name="plot"
+            value={this.state.plot}
+            onChange={this.handleInputChange} />
+          <button onClick={this.handleAddMovie}>Add Movie</button>
+        </form>
+
+        <div className="container">
+          <div className="row">
+            {
+              this.state.movies.map(movie => <Card movie={movie} />)
+            }
+          </div>
+        </div>
       </>
     )
   }
-}
 
-export default App
+}
